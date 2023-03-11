@@ -1,58 +1,40 @@
 <script>
-	import { createUserWithEmailAndPassword } from 'firebase/auth';
-	import { doc, setDoc, collection } from 'firebase/firestore';
-	import { auth, db } from '../firebase';
+	import { Firebase } from '../firebase';
 
-	let email = '';
-	let username = '';
-	let password = '';
-	let bio = '';
-
-	const signup = () => {
-		createUserWithEmailAndPassword(auth, email, password)
-			.then(async (userCredential) => {
-				return await setDoc(doc(db, 'users', userCredential.user.uid), {
-					uid: userCredential.user.uid,
-					username: username,
-					bio: bio,
-					followers: 0,
-					following: 0,
-					email: userCredential.user.email,
-				});
-			})
-			.catch((error) => {
-				console.log(error.code);
-				console.log(error.message);
-			});
+	let formUserInfo = {
+		email: '',
+		username: '',
+		password: '',
+		bio: '',
 	};
 </script>
 
-<div>
+<form>
 	<span>
 		<label for="email">Email: </label>
 		<input
-			bind:value={email}
+			bind:value={formUserInfo.email}
 			name="email"
 		/>
 	</span>
 	<span>
 		<label for="username">Username: </label>
 		<input
-			bind:value={username}
+			bind:value={formUserInfo.username}
 			name="username"
 		/>
 	</span>
 	<span>
 		<label for="bio">Bio: </label>
 		<input
-			bind:value={bio}
+			bind:value={formUserInfo.bio}
 			name="bio"
 		/>
 	</span>
 	<span>
 		<label for="password">Password: </label>
 		<input
-			bind:value={password}
+			bind:value={formUserInfo.password}
 			name="password"
 		/>
 	</span>
@@ -60,5 +42,10 @@
 		<label for="confirm">Confirm password: </label>
 		<input name="confirm" />
 	</span>
-	<button on:click={signup}>Sign up</button>
-</div>
+	<button
+		on:click={(event) => {
+			event.preventDefault();
+			Firebase.signup(formUserInfo);
+		}}>Sign up</button
+	>
+</form>
