@@ -1,7 +1,5 @@
 <script>
-	import { collection, getDocs, query, where } from 'firebase/firestore';
-	import Post from '../components/Post.svelte';
-	import { db } from '../firebase';
+	import { onMount } from 'svelte';
 
 	export let user;
 	let posts = [];
