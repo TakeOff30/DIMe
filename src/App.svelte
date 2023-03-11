@@ -14,14 +14,12 @@
 
 	let routes;
 	let isOnLogin = true;
-	console.log(routes);
 
 	onAuthStateChanged(
 		auth,
 		async (u) => {
 			if (u) {
 				getUserData(u);
-				console.log(routes);
 			} else {
 				$user = null;
 			}

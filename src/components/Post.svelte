@@ -11,7 +11,7 @@
 		<button>Like</button>
 		<button>Comment</button>
 	</span>
-	<ul>
+	<!-- <ul>
 		{showComments}
-	</ul>
+	</ul> -->
 </div>
