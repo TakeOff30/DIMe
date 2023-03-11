@@ -1,24 +1,17 @@
 <script>
-	export let user;
-	export let app;
+	import { signInWithEmailAndPassword } from 'firebase/auth';
+	import { auth } from '../firebase';
 	let email = '';
 	let password = '';
-	import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 	const login = () => {
-		const auth = getAuth(app);
-		signInWithEmailAndPassword(auth, email, password)
-			.then((userCredentials) => {
-				user = userCredentials.user;
-				console.log(user);
-			})
-			.catch((error) => {
-				console.log('error');
-			});
+		signInWithEmailAndPassword(auth, email, password).catch((error) => {
+			console.log(error);
+		});
 	};
 </script>
 
-<form>
+<div>
 	<span>
 		<label for="email">Email: </label>
 		<input bind:value={email} />
@@ -28,7 +21,7 @@
 		<input bind:value={password} />
 	</span>
 	<button on:click={login}>Login</button>
-</form>
+</div>
 
 <style>
 </style>

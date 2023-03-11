@@ -1,10 +1,7 @@
 <script>
-	import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-	import { doc, getDoc, setDoc } from 'firebase/firestore';
-
-	export let user;
-	export let app;
-	export let db;
+	import { createUserWithEmailAndPassword } from 'firebase/auth';
+	import { doc, setDoc, collection } from 'firebase/firestore';
+	import { auth, db } from '../firebase';
 
 	let email = '';
 	let username = '';
@@ -12,19 +9,15 @@
 	let bio = '';
 
 	const signup = () => {
-		const auth = getAuth(app);
 		createUserWithEmailAndPassword(auth, email, password)
 			.then(async (userCredential) => {
 				return await setDoc(doc(db, 'users', userCredential.user.uid), {
-					username: [username],
-					bio: [bio],
+					uid: userCredential.user.uid,
+					username: username,
+					bio: bio,
 					followers: 0,
 					following: 0,
-					email: [userCredential.user.email],
-				}).then(async () => {
-					const docRef = doc(db, 'users', userCredential.user.uid);
-					user = await getDoc(docRef);
-					console.log(user);
+					email: userCredential.user.email,
 				});
 			})
 			.catch((error) => {
@@ -34,7 +27,7 @@
 	};
 </script>
 
-<form>
+<div>
 	<span>
 		<label for="email">Email: </label>
 		<input
@@ -68,4 +61,4 @@
 		<input name="confirm" />
 	</span>
 	<button on:click={signup}>Sign up</button>
-</form>
+</div>
