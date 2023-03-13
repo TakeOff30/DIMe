@@ -23,5 +23,5 @@
 		<button>Like</button>
 		<button>Comment</button>
 	</span>
-	<CommentSection />
+	<CommentSection {commentsData} />
 </div>
