@@ -11,6 +11,7 @@
 	import { doc, getDoc } from 'firebase/firestore';
 	import { user, userData } from './stores/userStore';
 	import { db, auth } from './firebase';
+	import Nav from './components/Nav.svelte';
 
 	let routes;
 	let isOnLogin = true;
@@ -51,35 +52,31 @@
 	};
 </script>
 
-{#if $user}
-	<main>
+<main>
+	{#if $user}
 		<Router {routes} />
-	</main>
-	<nav>
-		<a href="#/">Home</a>
-		<a href="#/profile">Profile</a>
-		<a href="#/searchPage">Search</a>
-	</nav>
-	<button
-		on:click={() => {
-			auth.signOut();
-		}}>Logout</button
-	>
-{:else if isOnLogin}
-	<button
-		on:click={() => {
-			isOnLogin = !isOnLogin;
-		}}>Go to signup</button
-	>
-	<Login />
-{:else}
-	<button
-		on:click={() => {
-			isOnLogin = !isOnLogin;
-		}}>Go to login</button
-	>
-	<Signup />
-{/if}
+		<Nav />
+		<button
+			on:click={() => {
+				auth.signOut();
+			}}>Logout</button
+		>
+	{:else if isOnLogin}
+		<button
+			on:click={() => {
+				isOnLogin = !isOnLogin;
+			}}>Go to signup</button
+		>
+		<Login />
+	{:else}
+		<button
+			on:click={() => {
+				isOnLogin = !isOnLogin;
+			}}>Go to login</button
+		>
+		<Signup />
+	{/if}
+</main>
 
 <style>
 </style>
