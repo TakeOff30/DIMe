@@ -1,19 +1,13 @@
-<script lang="ts">
-	import {
-		collection,
-		doc,
-		getDocs,
-		limit,
-		orderBy,
-		query,
-		where,
-	} from 'firebase/firestore';
+<script>
+	// @ts-nocheck
+
 	import { Firebase } from '../firebase';
 	import CommentSection from './CommentSection.svelte';
 
 	export let postData;
-
+	console.log(postData);
 	let commentsData = Firebase.getComments(postData.id);
+	console.log(commentsData);
 </script>
 
 <div>
@@ -23,5 +17,8 @@
 		<button>Like</button>
 		<button>Comment</button>
 	</span>
-	<CommentSection {commentsData} />
+	<CommentSection
+		{postData}
+		{commentsData}
+	/>
 </div>

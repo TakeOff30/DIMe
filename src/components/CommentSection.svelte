@@ -1,11 +1,11 @@
 <script>
 	import Comment from './Comment.svelte';
 	import CommentGenerator from './CommentGenerator.svelte';
-
-	export let commentsData;
+	export let postData;
+	export let commentsData = [];
 </script>
 
-<CommentGenerator />
+<CommentGenerator {postData} />
 
 <div>
 	{#each commentsData as comment}

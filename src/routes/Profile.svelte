@@ -8,13 +8,12 @@
 	const q = query(collection(db, 'posts'), where('uid', '==', user.uid));
 	getDocs(q).then((snapShot) => {
 		snapShot.forEach((doc) => {
-			console.log(doc.id);
 			posts.push({
 				id: doc.id,
 				data: doc.data(),
 			});
-			posts = posts;
 		});
+		posts = posts;
 	});
 </script>
 

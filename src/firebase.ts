@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, doc, getDocs, getFirestore, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
@@ -73,9 +73,17 @@ const Firebase = (function() {
 		});
 	};
 
-	const getComments = async (id) => {
+	const createComment = async (postData, commentText) =>{
+		await addDoc(collection(db, `posts/${postData.id}/comments`), {
+			username: postData.data.username,
+			text: commentText,
+			timestamp: Date.now(),
+		})
+	}
+
+	const getComments = (id) => {
 		const comments = [];
-		await getDocs(
+		getDocs(
 			query(
 				collection(db, `posts/${id}/comments`),
 				orderBy('timestamp', 'desc'),
@@ -95,7 +103,8 @@ const Firebase = (function() {
         createPost,
         searchUser,
         addFollower,
-		getComments
+		getComments,
+		createComment
 	}
 })();
 
