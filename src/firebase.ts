@@ -54,10 +54,10 @@ const Firebase = (function() {
 	};
 
     const searchUser = async (username) => {
-		const q = await getDocs(
+		const q = getDocs(
 			query(collection(db, 'users'), where('username', '==', username))
 		);
-		return q.docs.at(0).data();
+		return (await q).docs.at(0).data();
 	};
 
     const addFollower = async (follower, followed) => {
@@ -81,20 +81,22 @@ const Firebase = (function() {
 		})
 	}
 
-	const getComments = (id) => {
+	const getComments = async (id) => {
 		const comments = [];
-		getDocs(
+		const q = await getDocs(
 			query(
 				collection(db, `posts/${id}/comments`),
 				orderBy('timestamp', 'desc'),
 				limit(10)
 			)
-		).then((docs) => {
-			docs.forEach((doc) => {
-				comments.push(doc.data());
-			});
-			return comments;
+		)
+			
+		q.forEach((doc) => {
+			comments.push(doc.data());
 		});
+			
+		console.log(comments)
+		return comments;
 	};
 
 	return {

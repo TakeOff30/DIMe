@@ -10,7 +10,11 @@
 	<input bind:value={toSearch} />
 	<button
 		on:click={() => {
-			result = Firebase.searchUser(toSearch);
+			Firebase.searchUser(toSearch).then((value) => {
+				console.log(value);
+				result = value;
+			});
+			console.log(result);
 		}}>Search</button
 	>
 </span>

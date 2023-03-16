@@ -5,9 +5,8 @@
 	import CommentSection from './CommentSection.svelte';
 
 	export let postData;
+	let showCommentSection = false;
 	console.log(postData);
-	let commentsData = Firebase.getComments(postData.id);
-	console.log(commentsData);
 </script>
 
 <div>
@@ -15,10 +14,13 @@
 	<p>{postData.data.content}</p>
 	<span>
 		<button>Like</button>
-		<button>Comment</button>
+		<button
+			on:click={() => {
+				showCommentSection = !showCommentSection;
+			}}>Comment</button
+		>
 	</span>
-	<CommentSection
-		{postData}
-		{commentsData}
-	/>
+	{#if showCommentSection}
+		<CommentSection {postData} />
+	{/if}
 </div>

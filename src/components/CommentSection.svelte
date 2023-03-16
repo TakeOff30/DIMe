@@ -1,8 +1,12 @@
 <script>
+	import { Firebase } from '../firebase';
 	import Comment from './Comment.svelte';
 	import CommentGenerator from './CommentGenerator.svelte';
 	export let postData;
-	export let commentsData = [];
+	let commentsData = [];
+	Firebase.getComments(postData.id).then((value) => {
+		commentsData = value;
+	});
 </script>
 
 <CommentGenerator {postData} />
