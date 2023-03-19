@@ -28,13 +28,14 @@ const Firebase = (function() {
 			userInfo.password
 		)
 			.then(async (userCredential) => {
-				return await setDoc(doc(db, 'users', userCredential.user.uid), {
+				await setDoc(doc(db, 'users', userCredential.user.uid), {
 					uid: userCredential.user.uid,
 					username: userInfo.username,
 					bio: userInfo.bio,
 					followers: 0,
 					following: 0,
 					email: userCredential.user.email,
+					feed: []
 				});
 			})
 			.catch((error) => {
@@ -44,34 +45,64 @@ const Firebase = (function() {
 	};
 
     const createPost = async (user, content) => {
-		await addDoc(collection(db, 'posts'), {
+		const postData = {
 			uid: user.uid,
 			username: user.username,
 			content: content,
 			likes: 0,
 			timestamp: Date.now(),
-		});
+		}
+		await addDoc(collection(db, 'posts'), postData);
+		updateFollowersFeed(user, postData);
 	};
 
+	const updateFollowersFeed = async (user, postData) =>{
+		const followers = await getDocs(
+			query(collection(db, 'followers'), where('followed_id', '==', user.uid))
+		);
+		followers.docs.forEach(async (follDoc)=>{
+			const followerRef = await getDoc(doc(db, 'users', follDoc.data().follower_id))
+			await updateDoc(doc(db, 'users', followerRef.data().uid), {
+				feed: [...followerRef.data().feed, postData]
+			});
+		})
+	}
+
     const searchUser = async (username) => {
-		const q = getDocs(
+		const q = await getDocs(
 			query(collection(db, 'users'), where('username', '==', username))
 		);
-		return (await q).docs.at(0).data();
+		return q.docs.at(0).data();
 	};
 
     const addFollower = async (follower, followed) => {
+		const followedPosts = await getDocs(
+			query(collection(db, 'posts'), 
+			where('uid', '==', followed.uid), 
+			orderBy('timestamp', 'desc'))
+		)
+		console.log(followedPosts.docs.at(0))
+		if(followedPosts.docs.at(0) != undefined){
+			await updateDoc(doc(db, 'users', follower.uid), {
+				following: parseInt(follower.following) + 1,
+				feed: [...followed.feed, followedPosts.docs.at(0).data()]
+			});
+		}else{
+			await updateDoc(doc(db, 'users', follower.uid), {
+				following: parseInt(follower.following) + 1
+			});
+		}
 		await addDoc(collection(db, 'followers'), {
 			follower_id: follower.uid,
 			followed_id: followed.uid,
 		});
-		await updateDoc(doc(db, 'users', follower.uid), {
-			following: parseInt(follower.following) + 1,
-		});
+		
 		await updateDoc(doc(db, 'users', followed.uid), {
 			followers: parseInt(followed.followers) + 1,
 		});
+
 	};
+
 
 	const createComment = async (postData, commentText) =>{
 		await addDoc(collection(db, `posts/${postData.id}/comments`), {
@@ -106,7 +137,7 @@ const Firebase = (function() {
         searchUser,
         addFollower,
 		getComments,
-		createComment
+		createComment,
 	}
 })();
 

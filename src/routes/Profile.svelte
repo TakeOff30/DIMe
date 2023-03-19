@@ -25,6 +25,6 @@
 </span>
 <div>
 	{#each posts as post}
-		<Post postData={post} />
+		<Post postData={post.data} />
 	{/each}
 </div>

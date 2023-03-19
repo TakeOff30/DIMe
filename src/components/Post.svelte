@@ -1,7 +1,4 @@
 <script>
-	// @ts-nocheck
-
-	import { Firebase } from '../firebase';
 	import CommentSection from './CommentSection.svelte';
 
 	export let postData;
@@ -10,8 +7,8 @@
 </script>
 
 <div>
-	<h3>{postData.data.username}</h3>
-	<p>{postData.data.content}</p>
+	<h3>{postData.username}</h3>
+	<p>{postData.content}</p>
 	<span>
 		<button>Like</button>
 		<button
