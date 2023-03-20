@@ -81,11 +81,12 @@ const Firebase = (function() {
 			where('uid', '==', followed.uid), 
 			orderBy('timestamp', 'desc'))
 		)
-		console.log(followedPosts.docs.at(0))
+		console.log(followed)
+		console.log(follower)
 		if(followedPosts.docs.at(0) != undefined){
 			await updateDoc(doc(db, 'users', follower.uid), {
 				following: parseInt(follower.following) + 1,
-				feed: [...followed.feed, followedPosts.docs.at(0).data()]
+				feed: [...follower.feed, followedPosts.docs.at(0).data()]
 			});
 		}else{
 			await updateDoc(doc(db, 'users', follower.uid), {
