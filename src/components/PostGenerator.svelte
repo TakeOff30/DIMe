@@ -6,8 +6,10 @@
 </script>
 
 <div>
-	<h2>What are you thinking about?</h2>
-	<textarea bind:value={content} />
+	<textarea
+		bind:value={content}
+		placeholder="What's poppin?"
+	/>
 	<button
 		on:click={() => {
 			Firebase.createPost($userData, content);

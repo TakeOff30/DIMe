@@ -12,6 +12,7 @@
 	import { user, userData } from './stores/userStore';
 	import { db, auth } from './firebase';
 	import Nav from './components/Nav.svelte';
+	import './styles/style.sass';
 
 	let routes;
 	let isOnLogin = true;
@@ -79,4 +80,8 @@
 </main>
 
 <style>
+	main {
+		padding: 1em;
+		height: 100vh;
+	}
 </style>
