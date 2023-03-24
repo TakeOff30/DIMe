@@ -1,5 +1,7 @@
 <script>
+	import { Firebase } from '../firebase';
 	import CommentSection from './CommentSection.svelte';
+	import { userData } from '../stores/userStore';
 
 	export let postData;
 	let showCommentSection = false;
@@ -15,6 +17,11 @@
 			on:click={() => {
 				showCommentSection = !showCommentSection;
 			}}>Comment</button
+		>
+		<button
+			on:click={() => {
+				Firebase.deletePost(userData, postData.postid);
+			}}>Delete</button
 		>
 	</span>
 	{#if showCommentSection}

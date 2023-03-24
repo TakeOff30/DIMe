@@ -1,7 +1,6 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import { user, userData, userPosts } from './stores/userStore'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDvqx6aavkZ95vai95O19wu9tg3wCLFGtc',
@@ -47,18 +46,27 @@ const Firebase = (function() {
 
 
     const createPost = async (user, content) => {
-		const postData = {
+		const docRef = await addDoc(collection(db, 'posts'), {
 			uid: user.uid,
 			username: user.username,
 			content: content,
 			likes: 0,
 			timestamp: Date.now(),
-		}
-		await addDoc(collection(db, 'posts'), postData);
-		updateFollowersFeed(user, postData);
+		});
+		await updateDoc(docRef, {
+			postid: docRef.id
+		})
+		addToFollowersFeed(user, {
+			uid: user.uid,
+			username: user.username,
+			content: content,
+			likes: 0,
+			timestamp: Date.now(),
+			postid: docRef.id
+		});
 	};
 
-	const updateFollowersFeed = async (user, postData) =>{
+	const addToFollowersFeed = async (user, postData) =>{
 		const followers = await getDocs(
 			query(collection(db, 'followers'), where('followed_id', '==', user.uid))
 		);
@@ -66,6 +74,25 @@ const Firebase = (function() {
 			const followerRef = await getDoc(doc(db, 'users', follDoc.data().follower_id))
 			await updateDoc(doc(db, 'users', followerRef.data().uid), {
 				feed: [...followerRef.data().feed, postData]
+			});
+		})
+	}
+
+	const deletePost = async (user, id) =>{
+		await deleteDoc(doc(db, 'posts', id))
+		removeFromFollowersFeed(user, id)
+	}
+
+	const removeFromFollowersFeed = async (user, postid) =>{
+		const followers = await getDocs(
+			query(collection(db, 'followers'), where('followed_id', '==', user.uid))
+		);
+		followers.docs.forEach(async (follDoc)=>{
+			const followerRef = await getDoc(doc(db, 'users', follDoc.data().follower_id))
+			const newFeed = followerRef.data().feed;
+			newFeed.filter(post => post.id === postid)
+			await updateDoc(doc(db, 'users', followerRef.data().uid), {
+				feed: newFeed
 			});
 		})
 	}
@@ -154,6 +181,7 @@ const Firebase = (function() {
         signup,
         createPost,
 		getPosts,
+		deletePost,
         searchUser,
         addFollower,
 		getComments,
