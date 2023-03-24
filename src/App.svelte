@@ -9,10 +9,10 @@
 	import Signup from './routes/Signup.svelte';
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { doc, getDoc } from 'firebase/firestore';
-	import { user, userData } from './stores/userStore';
+	import { user, userData, userPosts } from './stores/userStore';
 	import { db, auth } from './firebase';
 	import Nav from './components/Nav.svelte';
-	import './styles/style.sass';
+	import './styles/general.sass';
 
 	let routes;
 	let isOnLogin = true;
@@ -43,6 +43,7 @@
 					// Static props
 					props: {
 						user: $userData,
+						posts: $userPosts,
 					},
 				}),
 				'/searchPage': SearchPage,
@@ -53,17 +54,24 @@
 	};
 </script>
 
-<main>
+<body>
 	{#if $user}
-		<Router {routes} />
-		<Nav />
-		<button
-			on:click={() => {
-				auth.signOut();
-			}}>Logout</button
-		>
+		<header>
+			<h1>DIM<b>e</b></h1>
+			<button
+				class="log-button"
+				on:click={() => {
+					auth.signOut();
+				}}>Logout</button
+			>
+		</header>
+		<main>
+			<Router {routes} />
+			<Nav />
+		</main>
 	{:else if isOnLogin}
 		<button
+			class="log-sign-toggle"
 			on:click={() => {
 				isOnLogin = !isOnLogin;
 			}}>Go to signup</button
@@ -71,17 +79,32 @@
 		<Login />
 	{:else}
 		<button
+			class="log-sign-toggle"
 			on:click={() => {
 				isOnLogin = !isOnLogin;
 			}}>Go to login</button
 		>
 		<Signup />
 	{/if}
-</main>
+</body>
 
-<style>
-	main {
-		padding: 1em;
-		height: 100vh;
-	}
+<style lang="sass">
+
+	@use './styles/variables'
+
+	
+	header 
+		padding: 1em
+		display: flex
+		justify-content: space-between
+		align-items: center
+	
+	main
+		margin-bottom: 30%
+	
+	.log-sign-toggle 
+		position: fixed
+		top: 1em
+		right: 1em
+
 </style>
