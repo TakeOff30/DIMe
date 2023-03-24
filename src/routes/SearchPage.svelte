@@ -11,11 +11,13 @@
 	<button
 		on:click={() => {
 			Firebase.searchUser(toSearch).then((value) => {
-				console.log(value);
 				result = value;
 			});
-			console.log(result);
-		}}>Search</button
+		}}
+		><img
+			src="../src/assets/search.png"
+			alt="search button icon"
+		/></button
 	>
 </span>
 
@@ -31,5 +33,26 @@
 {/if}
 
 <style lang="sass">
+	span
+		width: 100%
+		display: flex
+		align-items: center
+		justify-content: space-around
+
+	input
+		border: 3px solid black
+		padding: .3em
+		font-size: 1.5em
+		border-radius: 10px
+		width: 60%
+
+	img 
+		width: 2em
+
+	div 
+		display: flex
+		align-items: center
+		justify-content: space-around
+		margin: 3em 0
 
 </style>

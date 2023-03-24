@@ -1,20 +1,8 @@
 <script>
-	import { collection, getDocs, query, where } from 'firebase/firestore';
 	import Post from '../components/Post.svelte';
-	import { db } from '../firebase';
 
 	export let user;
-	let posts = [];
-	const q = query(collection(db, 'posts'), where('uid', '==', user.uid));
-	getDocs(q).then((snapShot) => {
-		snapShot.forEach((doc) => {
-			posts.push({
-				id: doc.id,
-				data: doc.data(),
-			});
-		});
-		posts = posts;
-	});
+	export let posts;
 </script>
 
 <div class="info-section">
@@ -25,7 +13,6 @@
 		<h3>Following: {user.following}</h3>
 	</span>
 </div>
-
 <div class="post-section">
 	{#each posts as post}
 		<Post postData={post.data} />

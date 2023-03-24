@@ -1,4 +1,5 @@
 <script>
+	import { Firebase } from '../firebase';
 </script>
 
 <nav>
@@ -39,7 +40,7 @@
 		justify-content: space-around
 		background-color: variables.$primary-color
 		border-radius: 30px 30px 0 0
-		padding: 1em
+		padding: .2em 0 1em 0
 		box-shadow: variables.$primary-color 0px -10px 30px 30px
 		z-index: 5
 

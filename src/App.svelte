@@ -10,7 +10,7 @@
 	import { onAuthStateChanged } from 'firebase/auth';
 	import { doc, getDoc } from 'firebase/firestore';
 	import { user, userData, userPosts } from './stores/userStore';
-	import { db, auth } from './firebase';
+	import { db, auth, Firebase } from './firebase';
 	import Nav from './components/Nav.svelte';
 	import './styles/general.sass';
 
@@ -36,26 +36,29 @@
 		await getDoc(docRef).then((docSnap) => {
 			$user = u;
 			$userData = docSnap.data();
-			routes = {
-				'/': Home,
-				'/profile': wrap({
-					component: Profile,
-					// Static props
-					props: {
-						user: $userData,
-						posts: $userPosts,
-					},
-				}),
-				'/searchPage': SearchPage,
+			Firebase.getPosts($userData).then((value) => {
+				$userPosts = value;
+				routes = {
+					'/': Home,
+					'/profile': wrap({
+						component: Profile,
+						// Static props
+						props: {
+							user: $userData,
+							posts: $userPosts,
+						},
+					}),
+					'/searchPage': SearchPage,
 
-				'*': NotFound,
-			};
+					'*': NotFound,
+				};
+			});
 		});
 	};
 </script>
 
 <body>
-	{#if $user}
+	{#if $userPosts}
 		<header>
 			<h1>DIM<b>e</b></h1>
 			<button

@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
+import { user, userData, userPosts } from './stores/userStore'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDvqx6aavkZ95vai95O19wu9tg3wCLFGtc',
@@ -44,6 +45,7 @@ const Firebase = (function() {
 			});
 	};
 
+
     const createPost = async (user, content) => {
 		const postData = {
 			uid: user.uid,
@@ -81,8 +83,6 @@ const Firebase = (function() {
 			where('uid', '==', followed.uid), 
 			orderBy('timestamp', 'desc'))
 		)
-		console.log(followed)
-		console.log(follower)
 		if(followedPosts.docs.at(0) != undefined){
 			await updateDoc(doc(db, 'users', follower.uid), {
 				following: parseInt(follower.following) + 1,
@@ -113,6 +113,24 @@ const Firebase = (function() {
 		})
 	}
 
+	const getPosts = async (user)=>{
+		const posts = [];
+		const q = await getDocs(
+			query(
+				collection(db, 'posts'), 
+				where('uid', '==', user.uid)
+			)
+		);
+	
+		q.forEach((doc) => {
+			posts.push({
+				id: doc.id,
+				data: doc.data(),
+			});
+		});
+		return posts
+	}
+
 	const getComments = async (id) => {
 		const comments = [];
 		const q = await getDocs(
@@ -135,6 +153,7 @@ const Firebase = (function() {
 		login,
         signup,
         createPost,
+		getPosts,
         searchUser,
         addFollower,
 		getComments,
