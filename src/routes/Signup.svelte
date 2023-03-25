@@ -15,6 +15,7 @@
 		<input
 			bind:value={formUserInfo.email}
 			name="email"
+			type="email"
 		/>
 	</span>
 	<span>
@@ -26,7 +27,7 @@
 	</span>
 	<span>
 		<label for="bio">Bio: </label>
-		<input
+		<textarea
 			bind:value={formUserInfo.bio}
 			name="bio"
 		/>
@@ -36,11 +37,15 @@
 		<input
 			bind:value={formUserInfo.password}
 			name="password"
+			type="password"
 		/>
 	</span>
 	<span>
 		<label for="confirm">Confirm password: </label>
-		<input name="confirm" />
+		<input
+			name="confirm"
+			type="password"
+		/>
 	</span>
 	<button
 		on:click={(event) => {
@@ -49,3 +54,20 @@
 		}}>Sign up</button
 	>
 </form>
+
+<style lang="sass">
+	form
+		padding: 1em
+		margin-bottom: 2em
+	textarea
+		width: 70%
+		resize: none
+		padding: .2em
+		border: 3px solid black
+		border-radius: 10px
+		font-size: 1.2em
+	span
+		display: flex
+		align-items: center
+		gap: 1em
+</style>

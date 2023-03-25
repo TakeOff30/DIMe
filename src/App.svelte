@@ -33,10 +33,11 @@
 
 	const getUserData = async (u) => {
 		const docRef = doc(db, 'users', u.uid);
+
 		await getDoc(docRef).then((docSnap) => {
-			$user = u;
 			$userData = docSnap.data();
 			Firebase.getPosts($userData).then((value) => {
+				$user = u;
 				$userPosts = value;
 				routes = {
 					'/': Home,
@@ -58,12 +59,13 @@
 </script>
 
 <body>
-	{#if $userPosts}
+	{#if $user}
 		<header>
 			<h1>DIM<b>e</b></h1>
 			<button
 				class="log-button"
 				on:click={() => {
+					console.log('ciao');
 					auth.signOut();
 				}}>Logout</button
 			>
@@ -72,22 +74,30 @@
 			<Router {routes} />
 			<Nav />
 		</main>
-	{:else if isOnLogin}
-		<button
-			class="log-sign-toggle"
-			on:click={() => {
-				isOnLogin = !isOnLogin;
-			}}>Go to signup</button
-		>
-		<Login />
 	{:else}
-		<button
-			class="log-sign-toggle"
-			on:click={() => {
-				isOnLogin = !isOnLogin;
-			}}>Go to login</button
-		>
-		<Signup />
+		<header>
+			<h1>DIM<b>e</b></h1>
+		</header>
+		<div>
+			<h2>Don't ignore m<b>e</b></h2>
+			{#if isOnLogin}
+				<button
+					class="log-sign-toggle"
+					on:click={() => {
+						isOnLogin = !isOnLogin;
+					}}>Go to signup</button
+				>
+				<Login />
+			{:else}
+				<button
+					class="log-sign-toggle"
+					on:click={() => {
+						isOnLogin = !isOnLogin;
+					}}>Go to login</button
+				>
+				<Signup />
+			{/if}
+		</div>
 	{/if}
 </body>
 
@@ -109,5 +119,12 @@
 		position: fixed
 		top: 1em
 		right: 1em
+
+	div
+		display: flex
+		align-items: center
+		flex-direction: column
+		gap: 3em
+		margin-top: 2em
 
 </style>

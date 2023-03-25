@@ -6,6 +6,7 @@
 	export let postData;
 	let showCommentSection = false;
 	console.log(postData);
+	console.log($userData);
 </script>
 
 <div>
@@ -18,11 +19,13 @@
 				showCommentSection = !showCommentSection;
 			}}>Comment</button
 		>
-		<button
-			on:click={() => {
-				Firebase.deletePost(userData, postData.postid);
-			}}>Delete</button
-		>
+		{#if $userData.uid == postData.uid}
+			<button
+				on:click={() => {
+					Firebase.deletePost($userData, postData.postid);
+				}}>Delete</button
+			>
+		{/if}
 	</span>
 	{#if showCommentSection}
 		<CommentSection {postData} />

@@ -89,8 +89,8 @@ const Firebase = (function() {
 		);
 		followers.docs.forEach(async (follDoc)=>{
 			const followerRef = await getDoc(doc(db, 'users', follDoc.data().follower_id))
-			const newFeed = followerRef.data().feed;
-			newFeed.filter(post => post.id === postid)
+			let newFeed = followerRef.data().feed;
+			newFeed = newFeed.filter(post => post.postid !== postid)
 			await updateDoc(doc(db, 'users', followerRef.data().uid), {
 				feed: newFeed
 			});
