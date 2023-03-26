@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
+import * as yup from 'yup';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDvqx6aavkZ95vai95O19wu9tg3wCLFGtc',
@@ -15,11 +16,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const Firebase = (function() {
-	const login = (email, password) => {
-		signInWithEmailAndPassword(auth, email, password).catch((error) => {
-			console.log(error);
-		});
-	};
     
     const signup = (userInfo) => {
 		createUserWithEmailAndPassword(
@@ -177,7 +173,6 @@ const Firebase = (function() {
 	};
 
 	return {
-		login,
         signup,
         createPost,
 		getPosts,

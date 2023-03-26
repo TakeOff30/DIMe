@@ -5,8 +5,8 @@
 
 	export let postData;
 	let showCommentSection = false;
-	console.log(postData);
-	console.log($userData);
+
+	//onSnapShot post
 </script>
 
 <div>

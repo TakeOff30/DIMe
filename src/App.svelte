@@ -56,6 +56,8 @@
 			});
 		});
 	};
+
+	//onSnapShot user
 </script>
 
 <body>
