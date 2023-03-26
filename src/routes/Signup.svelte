@@ -11,6 +11,7 @@
 	};
 
 	let errors = {};
+	let usernameAlreadyUsed = false;
 
 	const schema = yup.object().shape({
 		email: yup
@@ -89,20 +90,32 @@
 	{#if errors.confirmPassword}
 		<span class="error">{errors.confirmPassword}</span>
 	{/if}
+	{#if usernameAlreadyUsed}
+		<span class="error">Username not available</span>
+	{/if}
 	<button
-		on:click={(event) => {
+		on:click={async (event) => {
 			event.preventDefault();
-			schema
-				.validate(formUserInfo, { abortEarly: false })
-				.then(() => {
-					errors = {};
-					Firebase.signup(formUserInfo);
-				})
-				.catch((err) => {
-					errors = err.inner.reduce((acc, err) => {
-						return { ...acc, [err.path]: err.message };
-					}, {});
-				});
+			let research;
+			Firebase.searchUser(formUserInfo.username).then((value) => {
+				research = value;
+				if (!research) {
+					schema
+						.validate(formUserInfo, { abortEarly: false })
+						.then(() => {
+							errors = {};
+							Firebase.signup(formUserInfo);
+						})
+						.catch((err) => {
+							errors = err.inner.reduce((acc, err) => {
+								return { ...acc, [err.path]: err.message };
+							}, {});
+						});
+					usernameAlreadyUsed = false;
+				} else {
+					usernameAlreadyUsed = true;
+				}
+			});
 		}}>Sign up</button
 	>
 </form>

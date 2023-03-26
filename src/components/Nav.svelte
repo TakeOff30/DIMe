@@ -1,5 +1,7 @@
 <script>
+	import { push } from 'svelte-spa-router';
 	import { Firebase } from '../firebase';
+	import { user, userData, userPosts } from '../stores/userStore';
 </script>
 
 <nav>
@@ -10,7 +12,21 @@
 			alt="home link"
 		/></a
 	>
-	<a href="#/profile"
+	<a
+		href="#/profile"
+		on:click={async () => {
+			await Firebase.getUser($user.uid).then(async (res) => {
+				$userData = res;
+				await Firebase.getPosts($userData)
+					.then((res) => {
+						console.log($userData);
+						$userPosts = res;
+					})
+					.then(() => {
+						push('/profile');
+					});
+			});
+		}}
 		><img
 			class="icon"
 			src="../src/assets/user.png"

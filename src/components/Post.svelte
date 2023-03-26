@@ -1,7 +1,8 @@
 <script>
 	import { Firebase } from '../firebase';
 	import CommentSection from './CommentSection.svelte';
-	import { userData } from '../stores/userStore';
+	import { userData, userPosts } from '../stores/userStore';
+	import { push } from 'svelte-spa-router';
 
 	export let postData;
 	let showCommentSection = false;
@@ -10,7 +11,26 @@
 </script>
 
 <div>
-	<h3>@{postData.username}</h3>
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<h3
+		on:click={async () => {
+			if ($userData.uid !== postData.uid) {
+				await Firebase.getUser(postData.uid).then(async (res) => {
+					$userData = res;
+					await Firebase.getPosts($userData)
+						.then((res) => {
+							console.log($userData);
+							$userPosts = res;
+						})
+						.then(() => {
+							push('/profile');
+						});
+				});
+			}
+		}}
+	>
+		@{postData.username}
+	</h3>
 	<p>{postData.content}</p>
 	<span>
 		<button>Like</button>

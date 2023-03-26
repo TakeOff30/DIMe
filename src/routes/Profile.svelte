@@ -1,20 +1,18 @@
 <script>
 	import Post from '../components/Post.svelte';
-
-	export let user;
-	export let posts;
+	import { userData, userPosts } from '../stores/userStore';
 </script>
 
 <div class="info-section">
-	<h1><b>@</b>{user.username}</h1>
-	<p>{user.bio}</p>
+	<h1><b>@</b>{$userData.username}</h1>
+	<p>{$userData.bio}</p>
 	<span>
-		<h3>Followers: {user.followers}</h3>
-		<h3>Following: {user.following}</h3>
+		<h3>Followers: {$userData.followers}</h3>
+		<h3>Following: {$userData.following}</h3>
 	</span>
 </div>
 <div class="post-section">
-	{#each posts as post}
+	{#each $userPosts as post}
 		<Post postData={post.data} />
 	{/each}
 </div>

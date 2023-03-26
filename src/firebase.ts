@@ -97,7 +97,12 @@ const Firebase = (function() {
 		const q = await getDocs(
 			query(collection(db, 'users'), where('username', '==', username))
 		);
-		return q.docs.at(0).data();
+		if(q.docs.at(0) == undefined){
+			return null
+		}else{
+			return q.docs.at(0).data();
+		}
+		
 	};
 
     const addFollower = async (follower, followed) => {
@@ -168,13 +173,21 @@ const Firebase = (function() {
 			comments.push(doc.data());
 		});
 			
-		console.log(comments)
 		return comments;
 	};
+
+	const getUser = async (id) =>{
+		let user;
+		await getDoc(doc(db, 'users', id)).then((res)=>{
+			user = res.data()
+		})
+		return user
+	}
 
 	return {
         signup,
         createPost,
+		getUser,
 		getPosts,
 		deletePost,
         searchUser,

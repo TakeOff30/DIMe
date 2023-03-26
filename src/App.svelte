@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Router from 'svelte-spa-router';
-	import { wrap } from 'svelte-spa-router/wrap';
 	import Home from './routes/Home.svelte';
 	import Profile from './routes/Profile.svelte';
 	import SearchPage from './routes/SearchPage.svelte';
@@ -13,9 +12,13 @@
 	import { db, auth, Firebase } from './firebase';
 	import Nav from './components/Nav.svelte';
 	import './styles/general.sass';
-
-	let routes;
 	let isOnLogin = true;
+	let routes = {
+		'/': Home,
+		'/profile': Profile,
+		'/searchPage': SearchPage,
+		'*': NotFound,
+	};
 
 	onAuthStateChanged(
 		auth,
@@ -39,20 +42,6 @@
 			Firebase.getPosts($userData).then((value) => {
 				$user = u;
 				$userPosts = value;
-				routes = {
-					'/': Home,
-					'/profile': wrap({
-						component: Profile,
-						// Static props
-						props: {
-							user: $userData,
-							posts: $userPosts,
-						},
-					}),
-					'/searchPage': SearchPage,
-
-					'*': NotFound,
-				};
 			});
 		});
 	};
