@@ -1,6 +1,7 @@
 <script>
 	import Post from '../components/Post.svelte';
 	import { userData, userPosts } from '../stores/userStore';
+	console.log($userPosts);
 </script>
 
 <div class="info-section">
@@ -13,7 +14,7 @@
 </div>
 <div class="post-section">
 	{#each $userPosts as post}
-		<Post postData={post.data} />
+		<Post postData={post} />
 	{/each}
 </div>
 

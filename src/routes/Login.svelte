@@ -2,7 +2,6 @@
 	import { auth } from '../firebase';
 	import * as yup from 'yup';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
-
 	let formUserInfo = {
 		email: '',
 		password: '',

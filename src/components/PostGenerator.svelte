@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { userData } from '../stores/userStore';
+	import { userData, userPosts } from '../stores/userStore';
 	import { Firebase } from '../firebase';
 
 	let content = '';
@@ -13,7 +13,10 @@
 	/>
 	<button
 		on:click={() => {
-			Firebase.createPost($userData, content);
+			Firebase.createPost($userData, content).then((newPost) => {
+				console.log(newPost);
+				$userPosts = [...$userPosts, newPost];
+			});
 			content = '';
 		}}>Post</button
 	>

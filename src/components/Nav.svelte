@@ -5,28 +5,30 @@
 </script>
 
 <nav>
-	<a href="#/"
+	<a
+		href="#/"
+		on:click={async () => {
+			if ($userData.uid !== $user.uid) {
+				await Firebase.getUser($user.uid).then(async (res) => {
+					$userData = res;
+					await Firebase.getPosts($userData)
+						.then((res) => {
+							console.log($userData);
+							$userPosts = res;
+						})
+						.then(() => {
+							push('/');
+						});
+				});
+			}
+		}}
 		><img
 			class="icon"
 			src="../src/assets/home.png"
 			alt="home link"
 		/></a
 	>
-	<a
-		href="#/profile"
-		on:click={async () => {
-			await Firebase.getUser($user.uid).then(async (res) => {
-				$userData = res;
-				await Firebase.getPosts($userData)
-					.then((res) => {
-						console.log($userData);
-						$userPosts = res;
-					})
-					.then(() => {
-						push('/profile');
-					});
-			});
-		}}
+	<a href="#/profile"
 		><img
 			class="icon"
 			src="../src/assets/user.png"

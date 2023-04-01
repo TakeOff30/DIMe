@@ -60,6 +60,14 @@ const Firebase = (function() {
 			timestamp: Date.now(),
 			postid: docRef.id
 		});
+		return {
+			uid: user.uid,
+			username: user.username,
+			content: content,
+			likes: 0,
+			timestamp: Date.now(),
+			postid: docRef.id
+		}
 	};
 
 	const addToFollowersFeed = async (user, postData) =>{
@@ -151,10 +159,8 @@ const Firebase = (function() {
 		);
 	
 		q.forEach((doc) => {
-			posts.push({
-				id: doc.id,
-				data: doc.data(),
-			});
+			posts.push(doc.data(),
+			);
 		});
 		return posts
 	}
@@ -184,10 +190,26 @@ const Firebase = (function() {
 		return user
 	}
 
+	const getUserData = async (u) => {
+		let res = {
+			data: null,
+			posts: [],
+		}
+		await getDoc(doc(db, 'users', u.uid)).then((docSnap) => {
+			res.data = docSnap.data();
+			Firebase.getPosts(res.data).then((value) => {
+				res.posts = value;
+			});
+		})
+		return res;
+		
+	};
+
 	return {
         signup,
         createPost,
 		getUser,
+		getUserData,
 		getPosts,
 		deletePost,
         searchUser,
