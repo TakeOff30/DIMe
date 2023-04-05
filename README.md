@@ -1,3 +1,6 @@
+# DIMe
+DIMe is a simple twitter-like social network built on Firestore Firebase. After the login you are allowed to search for users, follow/unfollow, create simple text posts, look at your profile page and more.
+
 # Svelte + TS + Vite
 
 This template should help get you started developing with Svelte and TypeScript in Vite.
