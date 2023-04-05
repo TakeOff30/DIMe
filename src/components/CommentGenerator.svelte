@@ -11,9 +11,11 @@
 	/>
 	<button
 		on:click={() => {
-			console.log(postData);
-			Firebase.createComment(postData, comment);
-			comment = '';
+			if (comment != '') {
+				console.log(postData);
+				Firebase.createComment(postData, comment);
+				comment = '';
+			}
 		}}>Comment</button
 	>
 </span>

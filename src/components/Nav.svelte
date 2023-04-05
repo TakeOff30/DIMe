@@ -2,43 +2,34 @@
 	import { push } from 'svelte-spa-router';
 	import { Firebase } from '../firebase';
 	import { user, userData, userPosts } from '../stores/userStore';
+	import { location } from 'svelte-spa-router';
 </script>
 
 <nav>
-	<a
-		href="#/"
-		on:click={async () => {
-			if ($userData.uid !== $user.uid) {
-				await Firebase.getUser($user.uid).then(async (res) => {
-					$userData = res;
-					await Firebase.getPosts($userData)
-						.then((res) => {
-							console.log($userData);
-							$userPosts = res;
-						})
-						.then(() => {
-							push('/');
-						});
-				});
-			}
-		}}
+	<a href="#/"
 		><img
 			class="icon"
-			src="../src/assets/home.png"
+			src={$location == '/'
+				? '../src/assets/homeF.png'
+				: '../src/assets/home.png'}
 			alt="home link"
 		/></a
 	>
 	<a href="#/profile"
 		><img
 			class="icon"
-			src="../src/assets/user.png"
+			src={$location == '/profile'
+				? '../src/assets/userF.png'
+				: '../src/assets/user.png'}
 			alt="profile link"
 		/></a
 	>
 	<a href="#/searchPage"
 		><img
 			class="icon"
-			src="../src/assets/search.png"
+			src={$location == '/searchPage'
+				? '../src/assets/searchF.png'
+				: '../src/assets/search.png'}
 			alt="search link"
 		/></a
 	>

@@ -4,7 +4,7 @@
 	import CommentGenerator from './CommentGenerator.svelte';
 	export let postData;
 	let commentsData = [];
-	Firebase.getComments(postData.id).then((value) => {
+	Firebase.getComments(postData.postid).then((value) => {
 		commentsData = value;
 	});
 </script>

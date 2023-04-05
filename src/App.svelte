@@ -7,6 +7,7 @@
 	import Login from './routes/Login.svelte';
 	import Signup from './routes/Signup.svelte';
 	import { onAuthStateChanged } from 'firebase/auth';
+	import { fade, fly } from 'svelte/transition';
 	import {
 		collection,
 		doc,
@@ -74,7 +75,7 @@
 			<h1>DIM<b>e</b></h1>
 		</header>
 		<div>
-			<h2>Don't ignore m<b>e</b></h2>
+			<h1>Don't ignore m<b>e</b></h1>
 			{#if isOnLogin}
 				<button
 					class="log-sign-toggle"

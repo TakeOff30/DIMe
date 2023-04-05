@@ -15,16 +15,10 @@
 	<h3
 		on:click={async () => {
 			if ($userData.uid !== postData.uid) {
-				await Firebase.getUser(postData.uid).then(async (res) => {
-					$userData = res;
-					await Firebase.getPosts($userData)
-						.then((res) => {
-							console.log($userData);
-							$userPosts = res;
-						})
-						.then(() => {
-							push('/profile');
-						});
+				Firebase.getUserData(postData).then((res) => {
+					$userData = res.data;
+					$userPosts = res.posts;
+					push('/profile');
 				});
 			}
 		}}

@@ -1,7 +1,6 @@
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import * as yup from 'yup';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDvqx6aavkZ95vai95O19wu9tg3wCLFGtc',
@@ -142,8 +141,8 @@ const Firebase = (function() {
 
 
 	const createComment = async (postData, commentText) =>{
-		await addDoc(collection(db, `posts/${postData.id}/comments`), {
-			username: postData.data.username,
+		await addDoc(collection(db, `posts/${postData.postid}/comments`), {
+			username: postData.username,
 			text: commentText,
 			timestamp: Date.now(),
 		})
@@ -159,8 +158,7 @@ const Firebase = (function() {
 		);
 	
 		q.forEach((doc) => {
-			posts.push(doc.data(),
-			);
+			posts.push(doc.data());
 		});
 		return posts
 	}
@@ -195,12 +193,14 @@ const Firebase = (function() {
 			data: null,
 			posts: [],
 		}
-		await getDoc(doc(db, 'users', u.uid)).then((docSnap) => {
+		await getDoc(doc(db, 'users', u.uid)).then( async (docSnap) => {
 			res.data = docSnap.data();
-			Firebase.getPosts(res.data).then((value) => {
+			await Firebase.getPosts(res.data).then((value) => {
+				console.log(value)
 				res.posts = value;
 			});
 		})
+		
 		return res;
 		
 	};

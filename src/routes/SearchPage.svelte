@@ -1,9 +1,16 @@
 <script>
 	import { Firebase } from '../firebase';
-	import { userData } from '../stores/userStore';
+	import { user, userData, userPosts } from '../stores/userStore';
 
 	let toSearch = '';
 	let result = null;
+
+	if ($userData.uid !== $user.uid) {
+		Firebase.getUserData($user).then((res) => {
+			$userData = res.data;
+			$userPosts = res.posts;
+		});
+	}
 </script>
 
 <span>
