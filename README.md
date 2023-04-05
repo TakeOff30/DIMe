@@ -1,4 +1,4 @@
-#DIMe
+# DIMe
 DIMe is a simple twitter-like social network built on Firestore Firebase. After the login you are allowed to search for users, follow/unfollow, create simple text posts, look at your profile page and more.
 
 # Svelte + TS + Vite
