@@ -1,12 +1,30 @@
 <script>
-	import { Firebase } from '../firebase';
+	import {
+		collection,
+		limit,
+		onSnapshot,
+		orderBy,
+		query,
+	} from 'firebase/firestore';
+	import { db, Firebase } from '../firebase';
 	import Comment from './Comment.svelte';
 	import CommentGenerator from './CommentGenerator.svelte';
 	export let postData;
 	let commentsData = [];
-	Firebase.getComments(postData.postid).then((value) => {
-		commentsData = value;
-	});
+	onSnapshot(
+		query(
+			collection(db, `posts/${postData.postid}/comments`),
+			orderBy('timestamp', 'desc'),
+			limit(10)
+		),
+		(snapShot) => {
+			commentsData = [];
+			snapShot.docs.forEach((comment) => {
+				commentsData.push(comment.data());
+			});
+			commentsData = commentsData;
+		}
+	);
 </script>
 
 <CommentGenerator {postData} />
@@ -16,3 +34,11 @@
 		<Comment {comment} />
 	{/each}
 </div>
+
+<style lang="sass">
+	@use '../styles/variables'
+	div
+		border-radius: 20px
+		color: variables.$primary-color
+		background-color: variables.$white
+</style>

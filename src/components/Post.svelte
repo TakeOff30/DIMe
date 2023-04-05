@@ -25,13 +25,30 @@
 	>
 		@{postData.username}
 	</h3>
-	<p>{postData.content}</p>
+	<p class="content">{postData.content}</p>
 	<span>
-		<button>Like</button>
+		<h3>{postData.likes} likes</h3>
+		<p>{new Date(postData.timestamp).toLocaleDateString()}</p>
+	</span>
+	<span>
+		<button
+			><img
+				src="../src/assets/heart.png"
+				class="icon"
+				alt="like icon"
+			/></button
+		>
 		<button
 			on:click={() => {
 				showCommentSection = !showCommentSection;
-			}}>Comment</button
+			}}
+			><img
+				src={showCommentSection
+					? '../src/assets/comment-altF.png'
+					: '../src/assets/comment-alt.png'}
+				class="icon"
+				alt="comment icon"
+			/></button
 		>
 		{#if $userData.uid == postData.uid}
 			<button
@@ -64,5 +81,11 @@
 
 	button
 		box-shadow: none
+	span
+		display: flex
+		align-items: center
+		justify-content: space-around
+	.content
+		margin: 2em 0 2em 0
 
 </style>
