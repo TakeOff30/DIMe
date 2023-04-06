@@ -11,6 +11,7 @@
 	import CommentGenerator from './CommentGenerator.svelte';
 	export let postData;
 	let commentsData = [];
+
 	onSnapshot(
 		query(
 			collection(db, `posts/${postData.postid}/comments`),

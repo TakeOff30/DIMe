@@ -1,13 +1,11 @@
 <script>
 	import { Firebase } from '../firebase';
 	import CommentSection from './CommentSection.svelte';
-	import { userData, userPosts } from '../stores/userStore';
+	import { user, userData, userPosts } from '../stores/userStore';
 	import { push } from 'svelte-spa-router';
 
 	export let postData;
 	let showCommentSection = false;
-
-	//onSnapShot post
 </script>
 
 <div>
@@ -27,13 +25,26 @@
 	</h3>
 	<p class="content">{postData.content}</p>
 	<span>
-		<h3>{postData.likes} likes</h3>
+		<h3>{postData.likes.length} likes</h3>
 		<p>{new Date(postData.timestamp).toLocaleDateString()}</p>
 	</span>
 	<span>
 		<button
+			on:click={() => {
+				if (postData.likes.includes($user.uid)) {
+					Firebase.removeLike(postData, $user).then((res) => {
+						postData.likes = res;
+					});
+				} else {
+					Firebase.addLike(postData).then((res) => {
+						postData.likes = res;
+					});
+				}
+			}}
 			><img
-				src="../src/assets/heart.png"
+				src={postData.likes.includes($user.uid)
+					? '../src/assets/heartF.png'
+					: '../src/assets/heart.png'}
 				class="icon"
 				alt="like icon"
 			/></button

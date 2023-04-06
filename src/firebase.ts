@@ -45,7 +45,7 @@ const Firebase = (function() {
 			uid: user.uid,
 			username: user.username,
 			content: content,
-			likes: 0,
+			likes: [],
 			timestamp: Date.now(),
 		});
 		await updateDoc(docRef, {
@@ -55,7 +55,7 @@ const Firebase = (function() {
 			uid: user.uid,
 			username: user.username,
 			content: content,
-			likes: 0,
+			likes: [],
 			timestamp: Date.now(),
 			postid: docRef.id
 		});
@@ -63,7 +63,7 @@ const Firebase = (function() {
 			uid: user.uid,
 			username: user.username,
 			content: content,
-			likes: 0,
+			likes: [],
 			timestamp: Date.now(),
 			postid: docRef.id
 		}
@@ -139,6 +139,29 @@ const Firebase = (function() {
 
 	};
 
+	const addLike = async (postData) =>{
+		const post = await getDoc(
+			doc(db, `posts/${postData.postid}`)
+		)
+		await updateDoc(doc(db, `posts/${postData.postid}`), {
+			likes: [...post.data().likes, postData.uid]
+		})
+
+		return [...post.data().likes, postData.uid]
+	}
+
+	const removeLike = async (postData, user) =>{
+		const post = await getDoc(
+			doc(db, `posts/${postData.postid}`)
+		)
+		let newLikes = post.data().likes;
+		newLikes = newLikes.filter(like => like !== user.uid)
+		await updateDoc(doc(db, `posts/${postData.postid}`), {
+			likes: newLikes
+		})
+
+		return newLikes
+	}
 
 	const createComment = async (postData, commentText) =>{
 		await addDoc(collection(db, `posts/${postData.postid}/comments`), {
@@ -216,6 +239,8 @@ const Firebase = (function() {
         addFollower,
 		getComments,
 		createComment,
+		addLike,
+		removeLike,
 	}
 })();
 
