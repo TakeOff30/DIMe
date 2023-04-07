@@ -13,10 +13,7 @@
 	/>
 	<button
 		on:click={() => {
-			Firebase.createPost($userData, content).then((newPost) => {
-				console.log(newPost);
-				$userPosts = [...$userPosts, newPost];
-			});
+			Firebase.createPost($userData, content);
 			content = '';
 		}}>Post</button
 	>

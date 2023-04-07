@@ -31,12 +31,14 @@
 	<span>
 		<button
 			on:click={() => {
+				console.log(postData);
+				console.log($user.uid);
 				if (postData.likes.includes($user.uid)) {
 					Firebase.removeLike(postData, $user).then((res) => {
 						postData.likes = res;
 					});
 				} else {
-					Firebase.addLike(postData).then((res) => {
+					Firebase.addLike(postData, $user).then((res) => {
 						postData.likes = res;
 					});
 				}

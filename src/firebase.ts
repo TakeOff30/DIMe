@@ -39,7 +39,18 @@ const Firebase = (function() {
 			});
 	};
 
-
+	const searchUser = async (username) => {
+		const q = await getDocs(
+			query(collection(db, 'users'), where('username', '==', username))
+		);
+		if(q.docs.at(0) == undefined){
+			return null
+		}else{
+			return q.docs.at(0).data();
+		}
+		
+	};
+	
     const createPost = async (user, content) => {
 		const docRef = await addDoc(collection(db, 'posts'), {
 			uid: user.uid,
@@ -83,10 +94,10 @@ const Firebase = (function() {
 
 	const deletePost = async (user, id) =>{
 		await deleteDoc(doc(db, 'posts', id))
-		removeFromFollowersFeed(user, id)
+		removePostFromFollowersFeed(user, id)
 	}
 
-	const removeFromFollowersFeed = async (user, postid) =>{
+	const removePostFromFollowersFeed = async (user, postid) =>{
 		const followers = await getDocs(
 			query(collection(db, 'followers'), where('followed_id', '==', user.uid))
 		);
@@ -100,17 +111,16 @@ const Firebase = (function() {
 		})
 	}
 
-    const searchUser = async (username) => {
+	const getUserFollowers = async (user) =>{
+		const followers = []
 		const q = await getDocs(
-			query(collection(db, 'users'), where('username', '==', username))
-		);
-		if(q.docs.at(0) == undefined){
-			return null
-		}else{
-			return q.docs.at(0).data();
-		}
-		
-	};
+			query(collection(db, 'followers'), where('follower_id', '==', user.uid))
+		)
+		q.docs.forEach(doc => {
+			followers.push(doc.data().followed_id)
+		})
+		return followers
+	}
 
     const addFollower = async (follower, followed) => {
 		const followedPosts = await getDocs(
@@ -132,22 +142,40 @@ const Firebase = (function() {
 			follower_id: follower.uid,
 			followed_id: followed.uid,
 		});
-		
 		await updateDoc(doc(db, 'users', followed.uid), {
 			followers: parseInt(followed.followers) + 1,
 		});
-
 	};
 
-	const addLike = async (postData) =>{
+	const removeFollower = async (follower, followed) =>{
+		const follDoc = await getDocs(query(
+			collection(db, 'followers'), 
+			where('followed_id', '==', followed.uid), 
+			where('follower_id', '==', follower.uid)
+			)
+		)
+		await deleteDoc(doc(db, 'followers' ,follDoc.docs.at(0).id))
+		const newFeed = follower.feed.filter(post => post.username !== followed.username)
+		await updateDoc(doc(db, 'users', follower.uid), {
+			feed: newFeed
+		})
+		await updateDoc(doc(db, 'users', followed.uid), {
+			followers: parseInt(followed.followers) - 1,
+		});
+		await updateDoc(doc(db, 'users', follower.uid), {
+			following: parseInt(follower.following) - 1
+		});
+	}
+
+	const addLike = async (postData, user) =>{
 		const post = await getDoc(
 			doc(db, `posts/${postData.postid}`)
 		)
 		await updateDoc(doc(db, `posts/${postData.postid}`), {
-			likes: [...post.data().likes, postData.uid]
+			likes: [...post.data().likes, user.uid]
 		})
 
-		return [...post.data().likes, postData.uid]
+		return [...post.data().likes, user.uid]
 	}
 
 	const removeLike = async (postData, user) =>{
@@ -163,6 +191,7 @@ const Firebase = (function() {
 		return newLikes
 	}
 
+	//to fix
 	const createComment = async (postData, commentText) =>{
 		await addDoc(collection(db, `posts/${postData.postid}/comments`), {
 			username: postData.username,
@@ -236,7 +265,9 @@ const Firebase = (function() {
 		getPosts,
 		deletePost,
         searchUser,
+		getUserFollowers,
         addFollower,
+		removeFollower,
 		getComments,
 		createComment,
 		addLike,

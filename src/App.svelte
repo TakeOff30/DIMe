@@ -16,7 +16,12 @@
 		query,
 		where,
 	} from 'firebase/firestore';
-	import { user, userData, userPosts } from './stores/userStore';
+	import {
+		user,
+		userData,
+		userPosts,
+		userFollowers,
+	} from './stores/userStore';
 	import { db, auth, Firebase } from './firebase';
 	import Nav from './components/Nav.svelte';
 	import './styles/general.sass';
@@ -35,6 +40,9 @@
 						Firebase.getPosts(u).then((res) => {
 							$user = u;
 							$userPosts = res;
+							Firebase.getUserFollowers($user).then((res) => {
+								$userFollowers = res;
+							});
 						});
 					}
 				);
@@ -46,6 +54,7 @@
 			console.error(error);
 		}
 	);
+
 	let routes = {
 		'/': Home,
 		'/profile': Profile,

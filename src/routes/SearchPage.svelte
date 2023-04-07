@@ -1,6 +1,11 @@
 <script>
 	import { Firebase } from '../firebase';
-	import { user, userData, userPosts } from '../stores/userStore';
+	import {
+		user,
+		userData,
+		userPosts,
+		userFollowers,
+	} from '../stores/userStore';
 
 	let toSearch = '';
 	let result = null;
@@ -33,10 +38,20 @@
 		<h2><b>@</b>{result.username}</h2>
 		<button
 			on:click={() => {
-				Firebase.addFollower($userData, result);
+				if ($userFollowers.includes(result.uid)) {
+					Firebase.removeFollower($userData, result);
+					$userFollowers = $userFollowers.filter(
+						(user) => user !== result.uid
+					);
+				} else {
+					Firebase.addFollower($userData, result);
+					$userFollowers = [...$userFollowers, result.uid];
+				}
 			}}
 			><img
-				src="../src/assets/user-add.png"
+				src={$userFollowers.includes(result.uid)
+					? '../src/assets/check.png'
+					: '../src/assets/user-add.png'}
 				alt="search button icon"
 			/></button
 		>
