@@ -191,10 +191,9 @@ const Firebase = (function() {
 		return newLikes
 	}
 
-	//to fix
-	const createComment = async (postData, commentText) =>{
+	const createComment = async (postData, commentText, user) =>{
 		await addDoc(collection(db, `posts/${postData.postid}/comments`), {
-			username: postData.username,
+			username: user.username,
 			text: commentText,
 			timestamp: Date.now(),
 		})

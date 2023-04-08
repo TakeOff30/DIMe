@@ -21,6 +21,7 @@
 		userData,
 		userPosts,
 		userFollowers,
+		mainUserData,
 	} from './stores/userStore';
 	import { db, auth, Firebase } from './firebase';
 	import Nav from './components/Nav.svelte';
@@ -33,6 +34,7 @@
 			if (u) {
 				onSnapshot(doc(db, 'users', u.uid), (snapShot) => {
 					$userData = snapShot.data();
+					$mainUserData = snapShot.data();
 				});
 				onSnapshot(
 					query(collection(db, 'posts'), where('uid', '==', u.uid)),
@@ -70,7 +72,6 @@
 			<button
 				class="log-button"
 				on:click={() => {
-					console.log('ciao');
 					auth.signOut();
 				}}>Logout</button
 			>

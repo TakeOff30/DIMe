@@ -1,5 +1,6 @@
 <script>
 	import { Firebase } from '../firebase';
+	import { mainUserData } from '../stores/userStore';
 	export let postData;
 	let comment = '';
 </script>
@@ -13,7 +14,7 @@
 		on:click={() => {
 			if (comment != '') {
 				console.log(postData);
-				Firebase.createComment(postData, comment);
+				Firebase.createComment(postData, comment, $mainUserData);
 				comment = '';
 			}
 		}}>Comment</button

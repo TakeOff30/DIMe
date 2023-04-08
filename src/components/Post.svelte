@@ -31,8 +31,6 @@
 	<span>
 		<button
 			on:click={() => {
-				console.log(postData);
-				console.log($user.uid);
 				if (postData.likes.includes($user.uid)) {
 					Firebase.removeLike(postData, $user).then((res) => {
 						postData.likes = res;
@@ -79,7 +77,7 @@
 <style lang="sass">
 	@use '../styles/variables'
 	div
-		background-color: variables.$primary-color
+		background-color: variables.$card-color
 		color: variables.$white
 		box-shadow: variables.$shadow1, variables.$shadow2
 		width: 90%
