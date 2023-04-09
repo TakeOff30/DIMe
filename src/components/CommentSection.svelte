@@ -6,7 +6,7 @@
 		orderBy,
 		query,
 	} from 'firebase/firestore';
-	import { db, Firebase } from '../firebase';
+	import { db } from '../firebase';
 	import Comment from './Comment.svelte';
 	import CommentGenerator from './CommentGenerator.svelte';
 	export let postData;

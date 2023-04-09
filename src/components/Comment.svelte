@@ -1,6 +1,5 @@
 <script>
 	export let comment;
-	console.log(comment);
 </script>
 
 <div>

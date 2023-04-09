@@ -27,7 +27,7 @@
 			});
 		}}
 		><img
-			src="../src/assets/search.png"
+			src="../assets/search.png"
 			alt="search button icon"
 		/></button
 	>
@@ -50,8 +50,8 @@
 			}}
 			><img
 				src={$userFollowers.includes(result.uid)
-					? '../src/assets/check.png'
-					: '../src/assets/user-add.png'}
+					? '../assets/check.png'
+					: '../assets/user-add.png'}
 				alt="search button icon"
 			/></button
 		>

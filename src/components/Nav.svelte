@@ -1,7 +1,4 @@
 <script>
-	import { push } from 'svelte-spa-router';
-	import { Firebase } from '../firebase';
-	import { user, userData, userPosts } from '../stores/userStore';
 	import { location } from 'svelte-spa-router';
 </script>
 
@@ -10,8 +7,8 @@
 		><img
 			class="icon"
 			src={$location == '/'
-				? '../src/assets/homeF.png'
-				: '../src/assets/home.png'}
+				? '../assets/homeF.png'
+				: '../assets/home.png'}
 			alt="home link"
 		/></a
 	>
@@ -19,8 +16,8 @@
 		><img
 			class="icon"
 			src={$location == '/profile'
-				? '../src/assets/userF.png'
-				: '../src/assets/user.png'}
+				? '../assets/userF.png'
+				: '../assets/user.png'}
 			alt="profile link"
 		/></a
 	>
@@ -28,8 +25,8 @@
 		><img
 			class="icon"
 			src={$location == '/searchPage'
-				? '../src/assets/searchF.png'
-				: '../src/assets/search.png'}
+				? '../assets/searchF.png'
+				: '../assets/search.png'}
 			alt="search link"
 		/></a
 	>

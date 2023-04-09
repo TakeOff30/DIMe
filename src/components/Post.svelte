@@ -43,8 +43,8 @@
 			}}
 			><img
 				src={postData.likes.includes($user.uid)
-					? '../src/assets/heartF.png'
-					: '../src/assets/heart.png'}
+					? '../assets/heartF.png'
+					: '../assets/heart.png'}
 				class="icon"
 				alt="like icon"
 			/></button
@@ -55,8 +55,8 @@
 			}}
 			><img
 				src={showCommentSection
-					? '../src/assets/comment-altF.png'
-					: '../src/assets/comment-alt.png'}
+					? '../assets/comment-altF.png'
+					: '../assets/comment-alt.png'}
 				class="icon"
 				alt="comment icon"
 			/></button

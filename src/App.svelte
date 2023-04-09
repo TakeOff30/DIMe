@@ -7,11 +7,9 @@
 	import Login from './routes/Login.svelte';
 	import Signup from './routes/Signup.svelte';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { fade, fly } from 'svelte/transition';
 	import {
 		collection,
 		doc,
-		getDoc,
 		onSnapshot,
 		query,
 		where,

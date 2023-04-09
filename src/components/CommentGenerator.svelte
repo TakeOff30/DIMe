@@ -13,7 +13,6 @@
 	<button
 		on:click={() => {
 			if (comment != '') {
-				console.log(postData);
 				Firebase.createComment(postData, comment, $mainUserData);
 				comment = '';
 			}
