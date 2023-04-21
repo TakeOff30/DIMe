@@ -4,8 +4,8 @@
 </script>
 
 <div>
-	{#each $userData.feed as post}
-		<Post postData={post} />
+	{#each $userData.feed as postId}
+		<Post {postId} />
 	{/each}
 </div>
 

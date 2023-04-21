@@ -6,6 +6,7 @@
 
 	if ($userData.uid !== $user.uid) {
 		Firebase.getUserData($user).then((res) => {
+			console.log(res);
 			$userData = res.data;
 			$userPosts = res.posts;
 		});

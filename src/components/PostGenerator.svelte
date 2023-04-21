@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { userData, userPosts } from '../stores/userStore';
+	import { userData } from '../stores/userStore';
 	import { Firebase } from '../firebase';
 
 	let content = '';
