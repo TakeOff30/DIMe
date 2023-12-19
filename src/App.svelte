@@ -7,25 +7,45 @@
 	import Login from './routes/Login.svelte';
 	import Signup from './routes/Signup.svelte';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { doc, getDoc, onSnapshot } from 'firebase/firestore';
-	import { user, userData, userPosts } from './stores/userStore';
+	import {
+		collection,
+		doc,
+		onSnapshot,
+		query,
+		where,
+	} from 'firebase/firestore';
+	import {
+		user,
+		userData,
+		userPosts,
+		userFollowers,
+		mainUserData,
+	} from './stores/userStore';
 	import { db, auth, Firebase } from './firebase';
 	import Nav from './components/Nav.svelte';
 	import './styles/general.sass';
 	let isOnLogin = true;
-	let routes = {
-		'/': Home,
-		'/profile': Profile,
-		'/searchPage': SearchPage,
-		'*': NotFound,
-	};
 
 	onAuthStateChanged(
 		auth,
 		async (u) => {
 			if (u) {
-				$user = u;
-				getUserData(u);
+				onSnapshot(doc(db, 'users', u.uid), (snapShot) => {
+					$userData = snapShot.data();
+					$mainUserData = snapShot.data();
+				});
+				onSnapshot(
+					query(collection(db, 'posts'), where('uid', '==', u.uid)),
+					() => {
+						Firebase.getPosts(u).then((res) => {
+							$user = u;
+							$userPosts = res;
+							Firebase.getUserFollowers($user).then((res) => {
+								$userFollowers = res;
+							});
+						});
+					}
+				);
 			} else {
 				$user = null;
 			}
@@ -35,22 +55,12 @@
 		}
 	);
 
-	const getUserData = async (u) => {
-		const docRef = doc(db, 'users', u.uid);
-
-		await getDoc(docRef).then((docSnap) => {
-			$userData = docSnap.data();
-			Firebase.getPosts($userData).then((value) => {
-				$userPosts = value;
-				console.log($userData);
-			});
-		});
+	let routes = {
+		'/': Home,
+		'/profile': Profile,
+		'/searchPage': SearchPage,
+		'*': NotFound,
 	};
-
-	onSnapshot(doc(db, 'users', $userData.uid), (doc) => {
-		$userData = doc.data();
-		$userPosts = doc.data().feed;
-	});
 </script>
 
 <body>
@@ -60,7 +70,6 @@
 			<button
 				class="log-button"
 				on:click={() => {
-					console.log('ciao');
 					auth.signOut();
 				}}>Logout</button
 			>
@@ -74,7 +83,7 @@
 			<h1>DIM<b>e</b></h1>
 		</header>
 		<div>
-			<h2>Don't ignore m<b>e</b></h2>
+			<h1>Don't ignore m<b>e</b></h1>
 			{#if isOnLogin}
 				<button
 					class="log-sign-toggle"
@@ -97,9 +106,7 @@
 </body>
 
 <style lang="sass">
-
 	@use './styles/variables'
-
 	
 	header 
 		padding: 1em
@@ -114,12 +121,10 @@
 		position: fixed
 		top: 1em
 		right: 1em
-
 	div
 		display: flex
 		align-items: center
 		flex-direction: column
 		gap: 3em
 		margin-top: 2em
-
 </style>

@@ -1,7 +1,6 @@
 <script>
 	import { Firebase } from '../firebase';
 	import * as yup from 'yup';
-
 	let formUserInfo = {
 		email: '',
 		username: '',
@@ -9,10 +8,8 @@
 		confirmPassword: '',
 		bio: '',
 	};
-
 	let errors = {};
 	let usernameAlreadyUsed = false;
-
 	const schema = yup.object().shape({
 		email: yup
 			.string()
@@ -136,5 +133,4 @@
 		display: flex
 		align-items: center
 		gap: 1em
-
 </style>

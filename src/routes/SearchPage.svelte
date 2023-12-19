@@ -1,9 +1,21 @@
 <script>
 	import { Firebase } from '../firebase';
-	import { userData } from '../stores/userStore';
+	import {
+		user,
+		userData,
+		userPosts,
+		userFollowers,
+	} from '../stores/userStore';
 
 	let toSearch = '';
 	let result = null;
+
+	if ($userData.uid !== $user.uid) {
+		Firebase.getUserData($user).then((res) => {
+			$userData = res.data;
+			$userPosts = res.posts;
+		});
+	}
 </script>
 
 <span>
@@ -15,7 +27,7 @@
 			});
 		}}
 		><img
-			src="../src/assets/search.png"
+			src="../assets/search.png"
 			alt="search button icon"
 		/></button
 	>
@@ -23,11 +35,25 @@
 
 {#if result}
 	<div>
-		<h2>{result.username}</h2>
+		<h2><b>@</b>{result.username}</h2>
 		<button
 			on:click={() => {
-				Firebase.addFollower($userData, result);
-			}}>Follow</button
+				if ($userFollowers.includes(result.uid)) {
+					Firebase.removeFollower($userData, result);
+					$userFollowers = $userFollowers.filter(
+						(user) => user !== result.uid
+					);
+				} else {
+					Firebase.addFollower($userData, result);
+					$userFollowers = [...$userFollowers, result.uid];
+				}
+			}}
+			><img
+				src={$userFollowers.includes(result.uid)
+					? '../assets/check.png'
+					: '../assets/user-add.png'}
+				alt="search button icon"
+			/></button
 		>
 	</div>
 {/if}

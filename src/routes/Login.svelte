@@ -2,7 +2,6 @@
 	import { auth } from '../firebase';
 	import * as yup from 'yup';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
-
 	let formUserInfo = {
 		email: '',
 		password: '',
@@ -77,4 +76,5 @@
 		display: flex
 		align-items: center
 		gap: 1em
+
 </style>
