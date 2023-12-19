@@ -7,7 +7,7 @@
 	import Login from './routes/Login.svelte';
 	import Signup from './routes/Signup.svelte';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { doc, getDoc } from 'firebase/firestore';
+	import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 	import { user, userData, userPosts } from './stores/userStore';
 	import { db, auth, Firebase } from './firebase';
 	import Nav from './components/Nav.svelte';
@@ -24,6 +24,7 @@
 		auth,
 		async (u) => {
 			if (u) {
+				$user = u;
 				getUserData(u);
 			} else {
 				$user = null;
@@ -40,13 +41,16 @@
 		await getDoc(docRef).then((docSnap) => {
 			$userData = docSnap.data();
 			Firebase.getPosts($userData).then((value) => {
-				$user = u;
 				$userPosts = value;
+				console.log($userData);
 			});
 		});
 	};
 
-	//onSnapShot user
+	onSnapshot(doc(db, 'users', $userData.uid), (doc) => {
+		$userData = doc.data();
+		$userPosts = doc.data().feed;
+	});
 </script>
 
 <body>

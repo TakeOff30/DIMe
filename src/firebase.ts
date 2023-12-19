@@ -4,7 +4,8 @@ import { initializeApp } from 'firebase/app';
 import * as yup from 'yup';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyDvqx6aavkZ95vai95O19wu9tg3wCLFGtc',
+	//access env variables here
+    apiKey: process.env.firebase_api_key,
     authDomain: 'dime-20745.firebaseapp.com',
     projectId: 'dime-20745',
     storageBucket: 'dime-20745.appspot.com',
